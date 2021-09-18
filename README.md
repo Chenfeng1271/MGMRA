@@ -40,3 +40,7 @@ python train_MGMRA.py --dataset sysu --lr 0.1 --batch-size 6 --num_pos 8 --gpu 0
 
 **Parameters**: More parameters can be found in the manuscript and code.
 
+### Reference
+```
+on arxiv
+```
