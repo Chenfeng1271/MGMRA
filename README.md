@@ -1,0 +1,42 @@
+# **Memory Regulation and Alignment toward Generalizer RGB-Infrared Person Re-identification**
+
+
+### Highlights
+- The learned coarse-to-fine prototypes can consistently provide domain-level semantic templets with various granularity, meeting the requirement for multi-level semantic alignment.
+- Our proposed MG-MRA boosts the performance of baseline and existing state of the arts, e.g., AGW  and HCT  by a large margin with limited consumptions. We achieve a new state-of-the-art on RegDB  and SYSU-MM01 with 94.59%/88.18% and 72.50%/68.94% Rank1/mAP respectively.
+
+### Results
+
+![image-20210909100353763](.\image-20210909100353763.png)
+
+
+### Usage
+Our code extends the pytorch implementation of Cross-Modal-Re-ID-baseline in [Github](https://github.com/mangye16/Cross-Modal-Re-ID-baseline). Please refer to the offical repo for details of data preparation.
+
+### Training
+
+Train original HCT method for RegDB by
+
+```bash
+python train_HCT.py --dataset regdb --lr 0.1 --gpu 0 --batch-size 8 --num_pos 4
+```
+
+Train a SG-MRA for RegDB by
+```bash
+python train_SGMRA.py --dataset regdb --lr 0.1 --gpu 0 --batch-size 8 --num_pos 4
+```
+
+Train a MG-MRA for RegDB by
+
+```bash
+python train_MGMRA.py --dataset regdb --lr 0.1 --gpu 0 --batch-size 8 --num_pos 4
+```
+
+Train a model for SYSU-MM01 by
+
+```bash
+python train_MGMRA.py --dataset sysu --lr 0.1 --batch-size 6 --num_pos 8 --gpu 0
+```
+
+**Parameters**: More parameters can be found in the manuscript and code.
+
