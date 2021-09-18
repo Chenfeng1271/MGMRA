@@ -5,6 +5,9 @@
 - The learned coarse-to-fine prototypes can consistently provide domain-level semantic templets with various granularity, meeting the requirement for multi-level semantic alignment.
 - Our proposed MG-MRA boosts the performance of baseline and existing state of the arts, e.g., AGW  and HCT  by a large margin with limited consumptions. We achieve a new state-of-the-art on RegDB  and SYSU-MM01 with 94.59%/88.18% and 72.50%/68.94% Rank1/mAP respectively.
 
+### Method
+![image-20210909100353763](20210918132449.png)
+
 ### Results
 
 ![image-20210909100353763](image-20210909100353763.png)
