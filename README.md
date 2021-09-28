@@ -45,5 +45,5 @@ python train_MGMRA.py --dataset sysu --lr 0.1 --batch-size 6 --num_pos 8 --gpu 0
 
 ### Reference
 ```
-on arxiv
+Chen F, Wu F, Wu Q, et al. Memory Regulation and Alignment toward Generalizer RGB-Infrared Person[J]. arXiv preprint arXiv:2109.08843, 2021.
 ```
