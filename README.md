@@ -1,4 +1,4 @@
-# **Memory Regulation and Alignment toward Generalizer RGB-Infrared Person Re-identification**
+# **[Memory Regulation and Alignment toward Generalizer RGB-Infrared Person Re-identification](https://arxiv.org/abs/2109.08843)**
 
 
 ### Highlights
