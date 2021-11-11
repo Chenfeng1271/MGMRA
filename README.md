@@ -45,5 +45,17 @@ python train_MGMRA.py --dataset sysu --lr 0.1 --batch-size 6 --num_pos 8 --gpu 0
 
 ### Reference
 ```
-Chen F, Wu F, Wu Q, et al. Memory Regulation and Alignment toward Generalizer RGB-Infrared Person[J]. arXiv preprint arXiv:2109.08843, 2021.
+@article{chen2021memory,
+  title={Memory Regulation and Alignment toward Generalizer RGB-Infrared Person},
+  author={Chen, Feng and Wu, Fei and Wu, Qi and Wan, Zhiguo},
+  journal={arXiv preprint arXiv:2109.08843},
+  year={2021}
+}
+
+@article{arxiv20reidsurvey,
+  title={Deep Learning for Person Re-identification: A Survey and Outlook},
+  author={Ye, Mang and Shen, Jianbing and Lin, Gaojie and Xiang, Tao and Shao, Ling and Hoi, Steven C. H.},
+  journal={arXiv preprint arXiv:2001.04193},
+  year={2020},
+}
 ```
