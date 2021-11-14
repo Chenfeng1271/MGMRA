@@ -43,6 +43,23 @@ python train_MGMRA.py --dataset sysu --lr 0.1 --batch-size 6 --num_pos 8 --gpu 0
 
 **Parameters**: More parameters can be found in the manuscript and code.
 
+**Reproduction**: Our code should be easy to reproduce the results reported in paper. You can train it directly. We also provide weight file (our model on SYSU all search, on 10 trials of RegDB) for fast evaluation. You can download it from (link：https://pan.baidu.com/s/1Hs74Qsii0sK15ELt_wQH_Q 
+code：1111)and verify the performance as following table. We also provide some training screencuts as below.
+
+| RegDB trial  visible2infared | Rank1 | mAP   |
+| ---------------------------- | ----- | ----- |
+| 1                            | 93.50 | 93.84 |
+| 2                            | 95.24 | 95.07 |
+| 3                            | 93.01 | 93.29 |
+| 4                            | 93.30 | 93.73 |
+| 5                            | 96.80 | 95.98 |
+| 6                            | 94.85 | 93.88 |
+| 7                            | 95.73 | 95.47 |
+| 8                            | 95.49 | 95.34 |
+| 9                            | 93.98 | 93.94 |
+| 10                           | 95.05 | 94.57 |
+| mean                         | 94.7  | 94.5  |
+
 ### Reference
 ```
 @article{chen2021memory,
