@@ -16,7 +16,7 @@ from data_manager import *
 from eval_metrics import eval_sysu, eval_regdb
 from model_MGMRA import embed_net
 from utils import *
-from loss import OriTripletLoss,  CenterTripletLoss, CrossEntropyLabelSmooth, TripletLoss_WRT,BarlowTwins_loss_mem
+from loss import OriTripletLoss,  CenterTripletLoss, CrossEntropyLabelSmooth, TripletLoss_WRT
 from tensorboardX import SummaryWriter
 from re_rank import random_walk, k_reciprocal
 
@@ -25,7 +25,7 @@ np.set_printoptions(threshold=np.inf)
 
 parser = argparse.ArgumentParser(description='PyTorch Cross-Modality Training')
 parser.add_argument('--dataset', default='regdb', help='dataset name: regdb or sysu]')
-parser.add_argument('--lr', default=0.1 , type=float, help='learning rate, 0.00035 for adam')
+parser.add_argument('--lr', default=0.01 , type=float, help='learning rate, 0.00035 for adam, 0.01 for sysu')
 parser.add_argument('--optim', default='sgd', type=str, help='optimizer')
 parser.add_argument('--arch', default='resnet50', type=str,
                     help='network baseline:resnet18 or resnet50')
@@ -46,7 +46,7 @@ parser.add_argument('--img_w', default=144, type=int,
                     metavar='imgw', help='img width')
 parser.add_argument('--img_h', default=288, type=int,
                     metavar='imgh', help='img height')
-parser.add_argument('--batch-size', default=8, type=int,
+parser.add_argument('--batch-size', default=4, type=int,
                     metavar='B', help='training batch size')
 parser.add_argument('--test-batch', default=64, type=int,
                     metavar='tb', help='testing batch size')
@@ -66,7 +66,7 @@ parser.add_argument('--mode', default='all', type=str, help='all or indoor')
 
 parser.add_argument('--share_net', default=2, type=int,
                     metavar='share', help='[1,2,3,4,5]the start number of shared network in the two-stream networks')
-parser.add_argument('--re_rank', default='no', type=str, help='performing reranking. [random_walk | k_reciprocal | no]')
+parser.add_argument('--re_rank', default='k_reciprocal', type=str, help='performing reranking. [random_walk | k_reciprocal | no]')
 parser.add_argument('--pcb', default='on', type=str, help='performing PCB, on or off')
 parser.add_argument('--w_center', default=2.0, type=float, help='the weight for center loss')
 
@@ -178,7 +178,6 @@ elif dataset == 'regdb':
         query_img, query_label = process_test_regdb(data_path, trial=args.trial, modal='thermal')
         gall_img, gall_label = process_test_regdb(data_path, trial=args.trial, modal='visible')
 
-
 gallset = TestData(gall_img, gall_label, transform=transform_test, img_size=(args.img_w, args.img_h))
 queryset = TestData(query_img, query_label, transform=transform_test, img_size=(args.img_w, args.img_h))
 
@@ -237,8 +236,7 @@ else:
     #criterion_tri= OriTripletLoss(batch_size=loader_batch, margin=args.margin)
     criterion_tri= CenterTripletLoss(batch_size=loader_batch, margin=args.margin)
 
-criterion_ins = torch.nn.MSELoss()
-criterion_part = BarlowTwins_loss_mem()
+criterion_part = torch.nn.MSELoss()
 
 criterion_id.to(device)
 criterion_tri.to(device)
@@ -294,9 +292,6 @@ def train(epoch):
     train_loss = AverageMeter()
     id_loss = AverageMeter()
     tri_loss = AverageMeter()
-    part_loss = AverageMeter()
-    ins_loss = AverageMeter()
-    sem_loss = AverageMeter()
     data_time = AverageMeter()
     batch_time = AverageMeter()
     correct = 0
@@ -318,7 +313,7 @@ def train(epoch):
 
 
         if args.pcb ==  'on':
-            feat, out0, feat_all, feat_mem, out_mem, out_ins, out_part = net(input1, input2)  
+            feat, out0, feat_all, feat_mem, out_mem, out_part = net(input1, input2)  
             loss_id = criterion_id(out0[0], labels.long())
             loss_tri_l, batch_acc = criterion_tri(feat[0], labels)
             for i in range(len(feat)-1):
@@ -330,12 +325,9 @@ def train(epoch):
             ### for mem branch
             loss_tri_mem, batch_acc = criterion_tri(feat_mem, labels.long())
             loss_id_mem = criterion_id(out_mem, labels.long())
-
-
-            loss_part = criterion_part(out_part.squeeze(-1)) 
             
-            loss_ins  =  criterion_ins(out_ins[0], out_ins[1])- 0.1
-            loss =  loss_id + loss_tri + loss_id_mem*0.1 + loss_tri_mem  + 0.1*loss_ins # + 0.01*loss_part
+            loss_part  =  criterion_part(out_part[0], out_part[1])
+            loss =  loss_id + loss_tri + loss_id_mem*0.1 + loss_tri_mem + (loss_part-0.1) * 0.1
         else:
             feat, out0 = net(input1, input2)
             loss_id = criterion_id(out0, labels)
@@ -354,9 +346,6 @@ def train(epoch):
         # update P
         train_loss.update(loss.item(), 2 * input1.size(0))
         id_loss.update(loss_id.item(), 2 * input1.size(0))
-        part_loss.update(loss_part.item(), 2 * input1.size(0))
-        ins_loss.update(loss_ins.item(), 2 * input1.size(0))
-        sem_loss.update(loss_tri_mem.item(), 2 * input1.size(0))
         tri_loss.update(loss_tri, 2 * input1.size(0))
         total += labels.size(0)
 
@@ -370,13 +359,10 @@ def train(epoch):
                   'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f}) '
                   'iLoss: {id_loss.val:.4f} ({id_loss.avg:.4f}) '
                   'TLoss: {tri_loss.val:.4f} ({tri_loss.avg:.4f}) '
-                  'SemLoss: {sem_loss.val:.4f} ({sem_loss.avg:.4f}) '
-                  'InsLoss: {ins_loss.val:.4f} ({ins_loss.avg:.4f}) '
-                  'PartLoss: {part_loss.val:.4f} ({part_loss.avg:.4f}) '
                   'Accu: {:.2f}'.format(
                 epoch, batch_idx, len(trainloader), current_lr,
                 100. * correct / total, batch_time=batch_time,
-                train_loss=train_loss, id_loss=id_loss,tri_loss=tri_loss,sem_loss = sem_loss, ins_loss=ins_loss,part_loss=part_loss)) 
+                train_loss=train_loss, id_loss=id_loss,tri_loss=tri_loss)) 
 
     writer.add_scalar('total_loss', train_loss.avg, epoch)
     writer.add_scalar('id_loss', id_loss.avg, epoch)

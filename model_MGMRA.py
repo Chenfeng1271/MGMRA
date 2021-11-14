@@ -3,7 +3,8 @@ import torch.nn as nn
 from torch.nn import init
 import torch.nn.functional as F
 from resnet import resnet50, resnet18
-from memory_module_MGMRA import MemModule
+from memory_MGMRA import MemModule
+#from memory_module_h import MemModule
 import random
 
 ##此版本为使用memory做part feature
@@ -300,7 +301,6 @@ class embed_net(nn.Module):
             local_feat_list = []
             logits_list = []
             local_feat_mem_list = []
-            local_feat_mem_ins_list = []
             local_feat_mem_part_list = []
             for i in range(self.num_stripes):
                 # shape [N, C, 1, 1]
@@ -310,14 +310,13 @@ class embed_net(nn.Module):
                 if self.gm_pool  == 'on':
                     # gm pool
                     local_feat = feat[:, :, i * stripe_h: (i + 1) * stripe_h, :]
-                    local_feat_sem, local_feat_ins, local_feat_part = self.mem_rep(local_feat)
+                    local_feat_mem, _, local_feat_mem_part = self.mem_rep(local_feat)
 
-                    local_feat_mem_part_list.append(local_feat_part)
-                    local_feat_mem_ins_list.append(local_feat_ins)
-                    local_feat_mem = local_feat + local_feat_sem
+                    local_feat_mem_part_list.append(local_feat_mem_part)
+                    local_feat_mem = local_feat + local_feat_mem
                     b, c, h, w = local_feat.shape
                     local_feat = local_feat.view(b,c,-1)
-                    p = 10.0    # regDB: 10.0    SYSU: 3.0
+                    p = 3.0    # regDB: 10.0    SYSU: 3.0
                     local_feat = (torch.mean(local_feat**p, dim=-1) + 1e-12)**(1/p)
                 else:
                     # average pool
@@ -343,7 +342,6 @@ class embed_net(nn.Module):
             feat_all = [lf for lf in local_feat_list]
             feat_all = torch.cat(feat_all, dim=1)
 
-
             feat_all_mem = [lf for lf in local_feat_mem_list]
             feat_all_mem = torch.cat(feat_all_mem, dim=2)
 
@@ -351,18 +349,12 @@ class embed_net(nn.Module):
             lf_mem_feat = self.bottleneck(lf_mem_pool)
 
             ### this part is for part alignment, we then would change the discription here
-
-
-
             feat_all_part = [lf for lf in local_feat_mem_part_list]
             index = [i for i in range(len(feat_all_part))]
             random.shuffle(index)
             feat_all_part_shuffle = [feat_all_part[i] for i in index]
             feat_all_part_chunk = torch.cat(feat_all_part_shuffle, dim=1)
             p_1, p_2 = torch.chunk(feat_all_part_chunk,2,1)
-            
-            feat_all_part = [self.pool_mem(lf) for lf in local_feat_mem_part_list]
-            feat_all_part = torch.cat(feat_all_part, dim=2)
 
 
 
@@ -370,7 +362,7 @@ class embed_net(nn.Module):
 
             if self.training:
                 #return local_feat_list, logits_list, feat_all , x_mem_pool+ lf_mem_pool, self.classifier(x_mem_feat+lf_mem_feat)
-                return local_feat_list, logits_list, feat_all , lf_mem_pool, self.classifier(lf_mem_feat),[p_1,p_2],feat_all_part
+                return local_feat_list, logits_list, feat_all , lf_mem_pool, self.classifier(lf_mem_feat),[p_1,p_2]
             else:
                 return self.l2norm(feat_all)
         else:    
