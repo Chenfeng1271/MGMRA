@@ -4,7 +4,7 @@
  ### updates
  1 I re-upload the MG-MRA related code. I already try it on my computer. It should be ok.
  
- 2 You may nitice that the input of each stage of MG-MRA is different from that of papers. These two setting have similar performance, i.e., one is better in RegDB, one is better in SYSU. I did not heavily tune my code with better hyper-parameters, so you may achieve little improvement than report.
+ 2 You may nitice that the input of each stage of MG-MRA is different from that of the paper. These two settings have a similar performance, i.e., one is better in RegDB, one is better in SYSU. I did not heavily tune my code with better hyper-parameters, so you may achieve little improvement than report.
  
 
 ### Highlights
