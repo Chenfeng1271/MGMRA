@@ -2,7 +2,9 @@
 
 
  ### updates
- I re-upload the MG-MRA related code. I already try it on my computer. It should be ok.
+ 1 I re-upload the MG-MRA related code. I already try it on my computer. It should be ok.
+ 2 You may nitice that the input of each stage of MG-MRA is different from that of papers. These two setting have similar performance, i.e., one is better in RegDB, one is better in SYSU. I did not heavily tune my code with better hyper-parameters, so you may achieve little improvement than report.
+ 
 
 ### Highlights
 - The learned coarse-to-fine prototypes can consistently provide domain-level semantic templets with various granularity, meeting the requirement for multi-level semantic alignment.
