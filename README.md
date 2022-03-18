@@ -8,6 +8,8 @@
  
  3 Some reviewers can not understand how MGMRA works and updates. You can refer to Vit since MGMRA is similar to positional embedding as learnable nn.embedding. For understanding, you can refer to MOCO as a stable dictionary. We just explain it in Bayesian model. The paper in arxiv has some typos and is hard to read. We will modify it.
  
+ 4 We try this work in RGB ReID and Video ReID, It achieves similar performance as baseline model in RGB ReID and about 1% improvement in Video ReID without changing any hyper parameter.
+ 
 
 ### Highlights
 - The learned coarse-to-fine prototypes can consistently provide domain-level semantic templets with various granularity, meeting the requirement for multi-level semantic alignment.
