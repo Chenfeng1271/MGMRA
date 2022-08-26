@@ -49,7 +49,7 @@ python train_MGMRA.py --dataset regdb --lr 0.1 --gpu 0 --batch-size 8 --num_pos 
 Train a model for SYSU-MM01 by
 
 ```bash
-python train_MGMRA.py --dataset sysu --lr 0.1 --batch-size 6 --num_pos 8 --gpu 0
+python train_MGMRA.py --dataset sysu --lr 0.01 --batch-size 6 --num_pos 8 --gpu 0
 ```
 
 **Parameters**: More parameters can be found in the manuscript and code.
