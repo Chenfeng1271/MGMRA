@@ -2,23 +2,23 @@
 
 
  ### Updates
- 1 I re-upload the MG-MRA related code. I already try it on my computer. It should be ok.
+ 1 I re-upload the MG-MRA code. I already try it on my computer. It should be ok.
  
  2 You may notice that the input of each stage of MG-MRA is different from that of the paper. These two settings have a similar performance, i.e., one is better in RegDB, one is better in SYSU. I did not heavily tune my code with better hyper-parameters, so you may achieve little improvement than report.
  
- 3 Some reviewers can not understand how MGMRA works and updates. You can refer to Vit since MGMRA is similar to positional embedding as learnable nn.embedding. For understanding, you can refer to MOCO as a stable dictionary. We just explain it in Bayesian model. The paper in arxiv has some typos and is hard to read. We will modify it.
+ 3 It is just a transformer decoder with the difference in qkv setting. You can follow CRET [1] to have a better understanding at this moment.
  
  4 We try this work in RGB ReID and Video ReID, It achieves similar performance as baseline model in RGB ReID and about 1% improvement in Video ReID without changing any hyper parameter.
  
-
+ [1] Ji K, Liu J, Hong W, et al. Cret: Cross-modal retrieval transformer for efficient text-video retrieval[C]//Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval. 2022: 949-959.
 ### Highlights
 - ~~The learned coarse-to-fine prototypes can consistently provide domain-level semantic templets with various granularity, meeting the requirement for multi-level semantic alignment.~~
 - ~~Our proposed MG-MRA boosts the performance of baseline and existing state of the arts, e.g., AGW  and HCT  by a large margin with limited consumptions. We achieve a new state-of-the-art on RegDB  and SYSU-MM01 with 94.59%/88.18% and 72.50%/68.94% Rank1/mAP respectively.~~
 - ~~This work has some potential interesting settings which have not been explored, such as uncompatiblity with maxpooling as introduced in the discussion section of our paper. Moreover, some specific phenomenon show this module does a regulation work if your try to use the MGMRA brach output to evaluate. Unluckily, I have to move to my next work and can not investigate it further.~~
-- It is just a transformer decoder with the difference in qkv setting. You can follow CRET [1] to have a better understanding at this moment.
+ 
 - I am confident that I achieved the reported result in the SYSU indoor setting, although I am currently unable to reproduce it. However, all other results align with what was reported. Given that the reimplemented result stands at 77.35 in SYSU indoor Rank1, which was considered state-of-the-art at the time, there's no reason for me to manipulate my findings. Had I intended to misrepresent my results, I would have opted not to release my code. I urge future studies to compare their findings with my reimplemented results to ensure fairness. That said, I will not amend the results in my paper as I stand by their authenticity.
 
-  [1] Ji K, Liu J, Hong W, et al. Cret: Cross-modal retrieval transformer for efficient text-video retrieval[C]//Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval. 2022: 949-959.
+ 
 
 ### Method
 ![image-20210909100353763](20210918132449.png)
